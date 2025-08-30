@@ -33,7 +33,7 @@ function parsePostTagsSafe(posts) {
 
 export const getAllPostController = async (req, res) => {
   try {
-    const posts = await findAllPost();
+    const { posts } = await findAllPost();
     res.json({
       success: true,
       posts: posts.length ? parsePostTagsSafe(posts) : [],
