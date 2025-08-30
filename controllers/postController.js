@@ -39,8 +39,8 @@ export const findPostByIdController = async (req, res) => {
 export const createPostController = async (req, res) => {
   const newPost = req.body;
   try {
-    const createdPost = await createPost(newPost);
-    res.status(201).json({ success: true, post: createdPost });
+    const result = await createPost(newPost);
+    res.status(201).json(result);
   } catch (err) {
     res.status(500).json({ ...err });
   }

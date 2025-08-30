@@ -34,7 +34,7 @@ export const createPost = (post) => {
       (err) => {
         if (!err) {
           post.id = stmt.lastID;
-          resolve({ success: true, post });
+          resolve({ success: true, posts: { ...post } });
         } else {
           return reject({ success: false, message: err.message });
         }
