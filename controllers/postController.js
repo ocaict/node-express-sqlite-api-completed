@@ -13,10 +13,28 @@ import {
   deletePost,
 } from "../models/Post.js";
 
+// Utility function to safely parse tags for posts
+function parsePostTagsSafe(posts) {
+  return posts.map((post) => {
+    try {
+      return {
+        ...post,
+        tags: JSON.parse(post.tags),
+      };
+    } catch (error) {
+      console.warn(`Failed to parse tags for post ${post.id}:`, error);
+      return {
+        ...post,
+        tags: [], // fallback to empty array
+      };
+    }
+  });
+}
+
 export const getAllPostController = async (req, res) => {
   try {
     const posts = await findAllPost();
-    res.json(posts);
+    res.json({ success: true, posts: parsePostTagsSafe(posts) });
   } catch (err) {
     res.status(500).json({ err });
   }
