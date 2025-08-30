@@ -1,6 +1,7 @@
 import fs from "fs";
 import sqlite3 from "sqlite3";
 const sqlite = sqlite3.verbose();
+
 // Return db from the function
 const createDB = (dbDir = "databases", dbName = "postdb.db") => {
   let dbPath;

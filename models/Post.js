@@ -54,10 +54,7 @@ export const findAllPost = () => {
         } else {
           resolve({
             success: true,
-            posts: posts.map((post) => ({
-              ...post,
-              tags: JSON.parse(post.tags),
-            })),
+            posts,
           });
         }
       }
