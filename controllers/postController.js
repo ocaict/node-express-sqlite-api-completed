@@ -47,7 +47,6 @@ export const findPostByIdController = async (req, res) => {
   const { id } = req.params;
   try {
     const post = await findPostById(id);
-    console.log(post);
     if (post) {
       res.json({ success: true, post });
     } else {

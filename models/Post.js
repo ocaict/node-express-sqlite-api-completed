@@ -65,8 +65,9 @@ export const findAllPost = () => {
 export const findPostById = (id) => {
   return new Promise((resolve, reject) => {
     db.get(`SELECT * FROM posts WHERE id = ?`, [id], (err, post) => {
-      if (!err) return resolve({ ...post, tags: JSON.parse(post.tags) });
-      return reject({ success: false, messsage: err.message });
+      if (err) return reject({ success: false, message: err.message });
+      if (!post) return reject({ success: false, message: "Post not found" });
+      return resolve({ ...post, tags: JSON.parse(post.tags) });
     });
   });
 };
