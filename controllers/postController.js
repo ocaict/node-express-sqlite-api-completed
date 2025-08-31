@@ -52,9 +52,10 @@ export const createPostController = async (req, res) => {
 export const updatePostController = async (req, res) => {
   const { id } = req.params;
   const updatedPost = req.body;
+  console.log(updatedPost);
   try {
-    await updatePost({ id, ...updatedPost });
-    res.json({ success: true, post: { ...updatedPost, id } });
+    const result = await updatePost({ id, ...updatedPost });
+    res.json(result);
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }

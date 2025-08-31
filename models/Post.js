@@ -76,10 +76,16 @@ export const findPostById = (id) => {
 export const updatePost = (post) => {
   return new Promise((resolve, reject) => {
     const stmt = db.prepare(
-      "UPDATE posts SET title = ?, content = ?, author=?, tags=? WHERE id = ?"
+      "UPDATE posts SET title = ?, content = ?, author=?, tags = ? WHERE id = ?"
     );
     stmt.run(
-      [post.title, post.content, post.author, post.tags, post.id],
+      [
+        post.title,
+        post.content,
+        post.author,
+        JSON.stringify(post.tags),
+        post.id,
+      ],
       (err) => {
         if (!err) return resolve({ success: true, post });
         return reject({ success: false, message: "Unable to update post" });
