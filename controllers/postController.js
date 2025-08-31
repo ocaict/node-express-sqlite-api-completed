@@ -13,33 +13,15 @@ import {
   deletePost,
 } from "../models/Post.js";
 
-// Utility function to safely parse tags for posts
-function parsePostTagsSafe(posts) {
-  return posts.map((post) => {
-    try {
-      return {
-        ...post,
-        tags: JSON.parse(post.tags),
-      };
-    } catch (error) {
-      console.warn(`Failed to parse tags for post ${post.id}:`, error);
-      return {
-        ...post,
-        tags: [], // fallback to empty array
-      };
-    }
-  });
-}
-
 export const getAllPostController = async (req, res) => {
   try {
     const { posts } = await findAllPost();
     res.json({
       success: true,
-      posts: posts.length ? parsePostTagsSafe(posts) : [],
+      posts,
     });
   } catch (err) {
-    res.status(500).json({ err });
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 
@@ -63,7 +45,7 @@ export const createPostController = async (req, res) => {
     const result = await createPost(newPost);
     res.status(201).json(result);
   } catch (err) {
-    res.status(500).json({ ...err });
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 
@@ -74,7 +56,7 @@ export const updatePostController = async (req, res) => {
     await updatePost({ id, ...updatedPost });
     res.json({ success: true, post: { ...updatedPost, id } });
   } catch (err) {
-    res.status(500).json({ ...err });
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 
@@ -84,6 +66,6 @@ export const deletePostController = async (req, res) => {
     await deletePost(id);
     res.json({ success: true, message: "Post deleted successfully" });
   } catch (err) {
-    res.status(500).json({ ...err });
+    res.status(500).json({ success: false, message: err.message });
   }
 };
