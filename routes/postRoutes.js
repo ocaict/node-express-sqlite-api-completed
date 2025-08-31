@@ -7,14 +7,15 @@ import {
   updatePostController,
   deletePostController,
 } from "../controllers/postController.js";
+
+// POST /posts
+router.post("/posts", createPostController);
+
 // GET /posts
 router.get("/posts", getAllPostController);
 
 // GET /posts/:id
 router.get("/posts/:id", findPostByIdController);
-
-// POST /posts
-router.post("/posts", createPostController);
 
 // PUT /posts/:id
 router.put("/posts/:id", updatePostController);

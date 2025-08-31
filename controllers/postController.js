@@ -1,10 +1,4 @@
-/* 
-getAllPosts() - GET /api/posts
-findPostById() - GET /api/posts/:id
-createPost() - POST /api/posts
-updatePost() - PUT /api/posts/:id
-deletePost() - DELETE /api/posts/:id
-*/
+// Post Controllers
 import {
   findAllPost,
   findPostById,
@@ -12,6 +6,28 @@ import {
   updatePost,
   deletePost,
 } from "../models/Post.js";
+
+export const createPostController = async (req, res) => {
+  const { title, content, author, category, tags } = req.body;
+
+  if (!title || !content || !author)
+    return res
+      .status(400)
+      .json({ success: false, message: "Enter the rquired fields" });
+  const newPost = {
+    title,
+    content,
+    author,
+    category: category ? category : null,
+    tags: tags ? tags : [],
+  };
+  try {
+    const result = await createPost(newPost);
+    res.status(201).json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
 
 export const getAllPostController = async (req, res) => {
   try {
@@ -39,20 +55,22 @@ export const findPostByIdController = async (req, res) => {
   }
 };
 
-export const createPostController = async (req, res) => {
-  const newPost = req.body;
-  try {
-    const result = await createPost(newPost);
-    res.status(201).json(result);
-  } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
-  }
-};
-
 export const updatePostController = async (req, res) => {
   const { id } = req.params;
-  const updatedPost = req.body;
-  console.log(updatedPost);
+  const { title, content, author, category, tags } = req.body;
+
+  if (!title || !content || !author)
+    return res
+      .status(400)
+      .json({ success: false, message: "Enter the rquired fields" });
+  const updatedPost = {
+    title,
+    content,
+    author,
+    category: category ? category : null,
+    tags: tags ? tags : [],
+  };
+
   try {
     const result = await updatePost({ id, ...updatedPost });
     res.json(result);

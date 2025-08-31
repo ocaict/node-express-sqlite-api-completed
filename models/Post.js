@@ -9,6 +9,7 @@ const tableQuery = `CREATE TABLE IF NOT EXISTS posts (
     title VARCHAR(255) NOT NULL,
     content TEXT NOT NULL,
     author TEXT NOT NULL,
+    category TEXT DEFAULT NULL,
     tags TEXT DEFAULT NULL,
     featured_image_url VARCHAR(500) DEFAULT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -27,10 +28,16 @@ db.serialize(() => {
 export const createPost = (post) => {
   return new Promise((resolve, reject) => {
     const query =
-      "INSERT INTO posts (title, content, author, tags) VALUES (?, ?, ?, ?)";
+      "INSERT INTO posts (title, content, author,category, tags) VALUES (?, ?, ?, ?, ?)";
     const stmt = db.prepare(query);
     stmt.run(
-      [post.title, post.content, post.author, JSON.stringify(post.tags)],
+      [
+        post.title,
+        post.content,
+        post.author,
+        post.category,
+        JSON.stringify(post.tags),
+      ],
       (err) => {
         if (!err) {
           post.id = stmt.lastID;
@@ -74,13 +81,14 @@ export const findPostById = (id) => {
 export const updatePost = (post) => {
   return new Promise((resolve, reject) => {
     const stmt = db.prepare(
-      "UPDATE posts SET title = ?, content = ?, author=?, tags = ? WHERE id = ?"
+      "UPDATE posts SET title = ?, content = ?, author=?, category = ?, tags = ? WHERE id = ?"
     );
     stmt.run(
       [
         post.title,
         post.content,
         post.author,
+        post.category,
         JSON.stringify(post.tags),
         post.id,
       ],
