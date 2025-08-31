@@ -47,13 +47,14 @@ export const findPostByIdController = async (req, res) => {
   const { id } = req.params;
   try {
     const post = await findPostById(id);
+    console.log(post);
     if (post) {
       res.json({ success: true, post });
     } else {
       res.status(404).json({ success: false, message: "Post not found" });
     }
   } catch (err) {
-    res.status(500).json({ ...err });
+    res.status(500).json({ success: false, message: err.message });
   }
 };
 

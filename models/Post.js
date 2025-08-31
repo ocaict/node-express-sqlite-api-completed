@@ -47,7 +47,7 @@ export const createPost = (post) => {
 export const findAllPost = () => {
   return new Promise((resolve, reject) => {
     db.all(
-      "SELECT rowid AS id, title, content, author, tags FROM posts",
+      "SELECT rowid AS id, title, content, author, tags, featured_image_url, created_at, updated_at FROM posts",
       (err, posts) => {
         if (err) {
           reject({ success: false, message: err.message });
