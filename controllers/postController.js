@@ -23,9 +23,9 @@ export const createPostController = async (req, res) => {
   };
   try {
     const result = await createPost(newPost);
-    res.status(201).json(result);
+    return res.status(201).json(result);
   } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
+    return res.status(500).json({ success: false, message: err.message });
   }
 };
 
@@ -37,7 +37,7 @@ export const getAllPostController = async (req, res) => {
       posts,
     });
   } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
+    return res.status(500).json({ success: false, message: err.message });
   }
 };
 
@@ -45,13 +45,14 @@ export const findPostByIdController = async (req, res) => {
   const { id } = req.params;
   try {
     const post = await findPostById(id);
-    if (post) {
-      res.json({ success: true, post });
-    } else {
-      res.status(404).json({ success: false, message: "Post not found" });
-    }
+    if (!post)
+      return res
+        .status(404)
+        .json({ success: false, message: "Post not found" });
+
+    return res.status(200).json({ success: true, post });
   } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
+    return res.status(500).json({ success: false, message: err.message });
   }
 };
 
@@ -73,9 +74,9 @@ export const updatePostController = async (req, res) => {
 
   try {
     const result = await updatePost({ id, ...updatedPost });
-    res.json(result);
+    return res.status(200).json(result);
   } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
+    return res.status(500).json({ success: false, message: err.message });
   }
 };
 
@@ -83,8 +84,10 @@ export const deletePostController = async (req, res) => {
   const { id } = req.params;
   try {
     await deletePost(id);
-    res.json({ success: true, message: "Post deleted successfully" });
+    return res
+      .status(200)
+      .json({ success: true, message: "Post deleted successfully" });
   } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
+    return res.status(500).json({ success: false, message: err.message });
   }
 };

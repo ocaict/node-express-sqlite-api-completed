@@ -54,14 +54,11 @@ export const createPost = (post) => {
 export const findAllPost = () => {
   return new Promise((resolve, reject) => {
     db.all("SELECT * FROM posts", (err, posts) => {
-      if (err) {
-        reject({ success: false, message: err.message });
-      } else {
-        resolve({
-          success: true,
-          posts,
-        });
-      }
+      if (err) return reject({ success: false, message: err.message });
+      return resolve({
+        success: true,
+        posts,
+      });
     });
   });
 };
@@ -71,7 +68,6 @@ export const findPostById = (id) => {
   return new Promise((resolve, reject) => {
     db.get(`SELECT * FROM posts WHERE id = ?`, [id], (err, post) => {
       if (err) return reject({ success: false, message: err.message });
-      if (!post) return reject({ success: false, message: "Post not found" });
       return resolve(post);
     });
   });

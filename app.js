@@ -27,8 +27,10 @@ app.use("/api", postRoute);
 app.use((req, res, next) => {
   res.status(404).json({ success: false, message: "Route not found" });
 });
+
 // Handle Errors
 app.use(errorHandler);
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   if (getLocalIPAddress()) {
