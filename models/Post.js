@@ -46,21 +46,19 @@ export const createPost = (post) => {
 // findAllPost() - Get all posts
 export const findAllPost = () => {
   return new Promise((resolve, reject) => {
-    db.all(
-      "SELECT rowid AS id, title, content, author, tags, featured_image_url, created_at, updated_at FROM posts",
-      (err, posts) => {
-        if (err) {
-          reject({ success: false, message: err.message });
-        } else {
-          resolve({
-            success: true,
-            posts,
-          });
-        }
+    db.all("SELECT * FROM posts", (err, posts) => {
+      if (err) {
+        reject({ success: false, message: err.message });
+      } else {
+        resolve({
+          success: true,
+          posts,
+        });
       }
-    );
+    });
   });
 };
+
 // findPostById(id) - Get post by ID
 export const findPostById = (id) => {
   return new Promise((resolve, reject) => {
