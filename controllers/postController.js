@@ -8,7 +8,7 @@ import {
 } from "../models/Post.js";
 
 export const createPostController = async (req, res) => {
-  const { title, content, author, category, tags } = req.body;
+  const { title, content, author, category } = req.body;
 
   if (!title || !content || !author)
     return res
@@ -19,7 +19,6 @@ export const createPostController = async (req, res) => {
     content,
     author,
     category: category ? category : null,
-    tags: tags ? tags : [],
   };
   try {
     const result = await createPost(newPost);
@@ -58,7 +57,7 @@ export const findPostByIdController = async (req, res) => {
 
 export const updatePostController = async (req, res) => {
   const { id } = req.params;
-  const { title, content, author, category, tags } = req.body;
+  const { title, content, author, category } = req.body;
 
   if (!title || !content || !author)
     return res
@@ -69,7 +68,6 @@ export const updatePostController = async (req, res) => {
     content,
     author,
     category: category ? category : null,
-    tags: tags ? tags : [],
   };
 
   try {

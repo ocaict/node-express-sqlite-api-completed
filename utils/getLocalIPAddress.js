@@ -1,8 +1,6 @@
 import { networkInterfaces } from "os";
-
+// Logic to get local IP address
 const getLocalIPAddress = () => {
-  // Logic to get local IP address
-
   const interfaces = networkInterfaces();
   for (const interfaceName in interfaces) {
     for (const iface of interfaces[interfaceName]) {

@@ -10,7 +10,6 @@ const tableQuery = `CREATE TABLE IF NOT EXISTS posts (
     content TEXT NOT NULL,
     author TEXT NOT NULL,
     category TEXT DEFAULT NULL,
-    tags TEXT DEFAULT NULL,
     featured_image_url VARCHAR(500) DEFAULT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -28,25 +27,16 @@ db.serialize(() => {
 export const createPost = (post) => {
   return new Promise((resolve, reject) => {
     const query =
-      "INSERT INTO posts (title, content, author,category, tags) VALUES (?, ?, ?, ?, ?)";
+      "INSERT INTO posts (title, content, author,category) VALUES (?, ?, ?, ?)";
     const stmt = db.prepare(query);
-    stmt.run(
-      [
-        post.title,
-        post.content,
-        post.author,
-        post.category,
-        JSON.stringify(post.tags),
-      ],
-      (err) => {
-        if (!err) {
-          post.id = stmt.lastID;
-          resolve({ success: true, posts: { ...post } });
-        } else {
-          return reject({ success: false, message: err.message });
-        }
+    stmt.run([post.title, post.content, post.author, post.category], (err) => {
+      if (!err) {
+        post.id = stmt.lastID;
+        resolve({ success: true, posts: { ...post } });
+      } else {
+        return reject({ success: false, message: err.message });
       }
-    );
+    });
   });
 };
 
@@ -77,17 +67,10 @@ export const findPostById = (id) => {
 export const updatePost = (post) => {
   return new Promise((resolve, reject) => {
     const stmt = db.prepare(
-      "UPDATE posts SET title = ?, content = ?, author=?, category = ?, tags = ? WHERE id = ?"
+      "UPDATE posts SET title = ?, content = ?, author=?, category = ? WHERE id = ?"
     );
     stmt.run(
-      [
-        post.title,
-        post.content,
-        post.author,
-        post.category,
-        JSON.stringify(post.tags),
-        post.id,
-      ],
+      [post.title, post.content, post.author, post.category, post.id],
       (err) => {
         if (!err) return resolve({ success: true, post });
         return reject({ success: false, message: "Unable to update post" });
