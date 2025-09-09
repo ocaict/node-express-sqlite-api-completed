@@ -32,9 +32,9 @@ export const createPost = (post) => {
     stmt.run([post.title, post.content, post.author, post.category], (err) => {
       if (!err) {
         post.id = stmt.lastID;
-        resolve({ success: true, posts: { ...post } });
+        resolve(post);
       } else {
-        return reject({ success: false, message: err.message });
+        return reject(err);
       }
     });
   });
@@ -44,11 +44,29 @@ export const createPost = (post) => {
 export const findAllPost = () => {
   return new Promise((resolve, reject) => {
     db.all("SELECT * FROM posts", (err, posts) => {
-      if (err) return reject({ success: false, message: err.message });
-      return resolve({
-        success: true,
-        posts,
-      });
+      if (!err) return resolve(posts);
+      return reject(err);
+    });
+  });
+};
+
+// findPostByCategory() - Get all posts by Category
+export const findPostByCategory = (category) => {
+  return new Promise((resolve, reject) => {
+    const query = "SELECT * FROM posts WHERE category = ?";
+    db.all(query, [category], (err, posts) => {
+      if (!err) return resolve(posts);
+      return reject(err);
+    });
+  });
+};
+// findPostByCategory() - Get all posts by Author
+export const findPostByAuthor = (author) => {
+  return new Promise((resolve, reject) => {
+    const query = "SELECT * FROM posts WHERE author = ?";
+    db.all(query, [author], (err, posts) => {
+      if (!err) return resolve(posts);
+      return reject(err);
     });
   });
 };
@@ -57,7 +75,7 @@ export const findAllPost = () => {
 export const findPostById = (id) => {
   return new Promise((resolve, reject) => {
     db.get(`SELECT * FROM posts WHERE id = ?`, [id], (err, post) => {
-      if (err) return reject({ success: false, message: err.message });
+      if (err) return reject(err);
       return resolve(post);
     });
   });
@@ -72,8 +90,8 @@ export const updatePost = (post) => {
     stmt.run(
       [post.title, post.content, post.author, post.category, post.id],
       (err) => {
-        if (!err) return resolve({ success: true, post });
-        return reject({ success: false, message: "Unable to update post" });
+        if (!err) return resolve(post);
+        return reject(err);
       }
     );
     stmt.finalize();
@@ -85,8 +103,8 @@ export const deletePost = (id) => {
   return new Promise((resolve, reject) => {
     const stmt = db.prepare("DELETE FROM posts WHERE id = ?");
     stmt.run([id], (err) => {
-      if (!err) return resolve({ success: true, id });
-      return reject({ success: false });
+      if (!err) return resolve(id);
+      return reject(err);
     });
   });
 };
