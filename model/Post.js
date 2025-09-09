@@ -50,6 +50,16 @@ export const findAllPost = () => {
   });
 };
 
+// findPostById(id) - Get post by ID
+export const findPostById = (id) => {
+  return new Promise((resolve, reject) => {
+    db.get(`SELECT * FROM posts WHERE id = ?`, [id], (err, post) => {
+      if (err) return reject(err);
+      return resolve(post);
+    });
+  });
+};
+
 // findPostByCategory() - Get all posts by Category
 export const findPostByCategory = (category) => {
   return new Promise((resolve, reject) => {
@@ -60,6 +70,7 @@ export const findPostByCategory = (category) => {
     });
   });
 };
+
 // findPostByCategory() - Get all posts by Author
 export const findPostByAuthor = (author) => {
   return new Promise((resolve, reject) => {
@@ -67,16 +78,6 @@ export const findPostByAuthor = (author) => {
     db.all(query, [author], (err, posts) => {
       if (!err) return resolve(posts);
       return reject(err);
-    });
-  });
-};
-
-// findPostById(id) - Get post by ID
-export const findPostById = (id) => {
-  return new Promise((resolve, reject) => {
-    db.get(`SELECT * FROM posts WHERE id = ?`, [id], (err, post) => {
-      if (err) return reject(err);
-      return resolve(post);
     });
   });
 };

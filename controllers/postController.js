@@ -7,7 +7,7 @@ import {
   deletePost,
   findPostByCategory,
   findPostByAuthor,
-} from "../models/Post.js";
+} from "../model/Post.js";
 
 export const createPostController = async (req, res) => {
   const { title, content, author, category } = req.body;
