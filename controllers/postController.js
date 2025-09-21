@@ -15,7 +15,7 @@ export const createPostController = async (req, res) => {
   if (!title || !content || !author)
     return res
       .status(400)
-      .json({ success: false, message: "Enter the required fields" });
+      .json({ success: false, message: "Enter all the required fields" });
   const newPost = {
     title,
     content,

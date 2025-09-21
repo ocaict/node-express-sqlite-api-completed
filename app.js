@@ -12,6 +12,7 @@ import getLocalIPAddress from "./utils/getLocalIPAddress.js";
 import homeRoute from "./routes/homeRoute.js";
 import postRoute from "./routes/postRoutes.js";
 import { errorHandler } from "./errorHandler/errorHandler.js";
+import job from "./utils/cron.js";
 
 const app = express();
 
@@ -23,7 +24,10 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use(homeRoute);
 app.use("/api", postRoute);
+// Cron Job
+job.start();
 
+// Handle 404 - Route Not Found
 app.use((req, res, next) => {
   res.status(404).json({ success: false, message: "Route not found" });
 });
