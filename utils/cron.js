@@ -1,9 +1,9 @@
 import axios from "axios";
 import { CronJob } from "cron";
 
-// Run Cron Job Every 14 Minutes
+// Run Cron Job Every 2 Minutes
 const job = new CronJob(
-  "*/14 * * * *", // Runs every 14 minutes
+  "*/2 * * * *", // Runs every 2 minutes
   async () => {
     // Task to be executed
     try {
