@@ -1,16 +1,17 @@
-import axios from "axios";
+// Use fetch API to make HTTP requests
 import { CronJob } from "cron";
 
-// Run Cron Job Every 14 Minutes
+// Run Cron Job Every 1 Minute
 const job = new CronJob(
-  "*/14 * * * *", // Runs every 14 minutes
+  "*/1 * * * *", // Runs every 1 minute
   async () => {
     // Task to be executed
     try {
-      const response = await axios.get(
+      const response = await fetch(
         "https://node-express-sqlite-api-completed.onrender.com/"
       );
-      console.log("Cron Job executed successfully:", response.data);
+      const data = await response.json();
+      console.log("Cron Job executed successfully:", data);
     } catch (error) {
       console.error("Error executing Cron Job:", error);
     }
