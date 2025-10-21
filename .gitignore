@@ -1,7 +1,4 @@
 node_modules
-databases
 database
-text.md
-public
 .env
-test.json
+test.*

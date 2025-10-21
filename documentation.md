@@ -1,6 +1,38 @@
-# Blog API with Node.js and SQLite
+# Building a RESTful API with SQLite, Node.js, and Express
 
-A simple blog API built with Node.js, Express, and SQLite database for creating, reading, updating, and deleting blog posts.
+🚀 Complete source code for the Udemy course: "Building a RESTful API with SQLite, Node.js, and Express"
+
+## 📚 What You'll Learn
+
+- Build RESTful APIs with Node.js & Express
+- Implement SQLite database with raw SQL
+- Structure code using MVC architecture
+- Deploy to production with Render
+- Keep API alive with cron jobs
+
+🌐 Live Demo
+API URL: [https://blog-post-api-iohi.onrender.com/posts/](https://blog-post-api-iohi.onrender.com/posts/)
+
+## 🛠️ Tech Stack
+
+- Node.js
+- Express.js
+- SQLite
+
+## 🚀 Quick Start
+
+1. Clone the repository
+
+```bash
+git clone [https://github.com/ocaict/blog_post_api.git]
+cd blog-api-crash-course
+```
+
+2. Install dependencies
+   `npm install`
+
+3. Start the development server
+   `npm run dev`
 
 ## Prerequisites
 
@@ -58,197 +90,17 @@ npm install nodemon -D
 Create the following folder structure in your project root:
 
 ```
-your-project/
+project/
+├── controllers/
+├── models/
 ├── db_config/
-├── model/
-├── databases/ (will be created automatically)
-└── package.json
+├── routes/
+├── middlewares/
+├── database/
+└── /utils
 ```
 
 ## Database Configuration
-
-### Step 4: Create Database Connection
-
-1. Create a file `db_config/db.js`
-2. Copy and paste the following code:
-
-```javascript
-import fs from "fs";
-import sqlite3 from "sqlite3";
-const sqlite = sqlite3.verbose();
-
-// Return db from the function
-const createDB = (dbDir = "databases", dbName = "postdb.db") => {
-  let dbPath;
-  if (!fs.existsSync(dbDir)) {
-    fs.mkdirSync(dbDir, { recursive: true });
-    dbPath = `${dbDir}/${dbName}`;
-  } else {
-    dbPath = `${dbDir}/${dbName}`;
-  }
-  const db = new sqlite.Database(dbPath, (err) => {
-    if (!err) return console.log("Database Created or Already Exist");
-    console.log("Error Creating Database", err);
-  });
-  return db;
-};
-
-export default createDB;
-```
-
-### Step 5: Create Database Table
-
-1. Create a file `model/Post.js`
-2. First, import the database connection and create the database instance:
-
-```javascript
-import createDB from "../db_config/db.js";
-const db = createDB();
-```
-
-3. Add the table creation code:
-
-```javascript
-const tableQuery = `CREATE TABLE IF NOT EXISTS posts (
-    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    title VARCHAR(255) NOT NULL,
-    content TEXT NOT NULL,
-    author TEXT NOT NULL,
-    category TEXT DEFAULT NULL,
-    featured_image_url VARCHAR(500) DEFAULT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);`;
-
-// CREATE TABLE
-db.serialize(() => {
-  db.run(tableQuery, (err) => {
-    if (!err) return console.log("Table Created");
-    console.log("Unable to create Table", err);
-  });
-});
-```
-
-## CRUD Operations
-
-### Step 6: Implement CRUD Functions
-
-Add the following functions to your `model/Post.js` file:
-
-#### Create a New Blog Post
-
-```javascript
-export const createPost = (post) => {
-  return new Promise((resolve, reject) => {
-    const query =
-      "INSERT INTO posts (title, content, author, category) VALUES (?, ?, ?, ?)";
-    const stmt = db.prepare(query);
-    stmt.run(
-      [post.title, post.content, post.author, post.category],
-      function (err) {
-        if (!err) {
-          post.id = this.lastID;
-          resolve(post);
-        } else {
-          return reject(err);
-        }
-      }
-    );
-    stmt.finalize();
-  });
-};
-```
-
-#### Get All Blog Posts
-
-```javascript
-export const findAllPost = () => {
-  return new Promise((resolve, reject) => {
-    db.all("SELECT * FROM posts", (err, posts) => {
-      if (!err) return resolve(posts);
-      return reject(err);
-    });
-  });
-};
-```
-
-#### Get a Single Blog Post by ID
-
-```javascript
-export const findPostById = (id) => {
-  return new Promise((resolve, reject) => {
-    db.get(`SELECT * FROM posts WHERE id = ?`, [id], (err, post) => {
-      if (err) return reject(err);
-      return resolve(post);
-    });
-  });
-};
-```
-
-#### Update an Existing Blog Post
-
-```javascript
-export const updatePost = (post) => {
-  return new Promise((resolve, reject) => {
-    const stmt = db.prepare(
-      "UPDATE posts SET title = ?, content = ?, author = ?, category = ? WHERE id = ?"
-    );
-    stmt.run(
-      [post.title, post.content, post.author, post.category, post.id],
-      (err) => {
-        if (!err) return resolve(post);
-        return reject(err);
-      }
-    );
-    stmt.finalize();
-  });
-};
-```
-
-#### Delete a Blog Post
-
-```javascript
-export const deletePost = (id) => {
-  return new Promise((resolve, reject) => {
-    const stmt = db.prepare("DELETE FROM posts WHERE id = ?");
-    stmt.run([id], (err) => {
-      if (!err) return resolve(id);
-      return reject(err);
-    });
-    stmt.finalize();
-  });
-};
-```
-
-## Next Steps
-
-After completing these steps, you'll have:
-
-- ✅ A configured Node.js project with all necessary dependencies
-- ✅ A SQLite database connection setup
-- ✅ A posts table created in your database
-- ✅ Complete CRUD operations for blog posts
-
-### To continue building your API:
-
-1. **Create Express routes** to handle HTTP requests (GET, POST, PUT, DELETE)
-2. **Set up middleware** for parsing JSON and handling CORS
-3. **Create an app.js or server.js** file to start your Express server
-4. **Test your endpoints** using Postman
-5. **View your database** using DB Browser for SQLite
-
-### Package.json Scripts
-
-Consider adding these scripts to your `package.json`:
-
-```json
-{
-  "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js"
-  }
-}
-```
 
 ## Database Schema
 
@@ -265,13 +117,181 @@ Your posts table will have the following structure:
 | created_at         | DATETIME     | DEFAULT CURRENT_TIMESTAMP  |
 | updated_at         | DATETIME     | DEFAULT CURRENT_TIMESTAMP  |
 
-## Troubleshooting
+### Step 4: Create Database Connection
 
-- Make sure all dependencies are installed correctly
-- Verify that your folder structure matches the import paths
-- Check that you're using ES6 modules (add `"type": "module"` to your package.json)
-- Ensure your database folder has write permissions
+1. Create a file `db_config/database.js`
+2. Copy and paste the following code:
 
-## Support
+```javascript
+import sqlite3 from "sqlite3";
+import fs from "fs";
 
-If you encounter any issues, check the console for error messages and verify that all prerequisites are properly installed.
+const sqlite = sqlite3.verbose();
+
+const createDB = (dbDir = "database", dbName = "postdb.db") => {
+  let dbPath;
+  if (!fs.existsSync(dbDir)) {
+    fs.mkdirSync(dbDir);
+    dbPath = `${dbDir}/${dbName}`;
+  } else {
+    dbPath = `${dbDir}/${dbName}`;
+  }
+
+  const db = new sqlite.Database(dbPath, (err) => {
+    if (err) return console.log(err);
+    console.log("Connected database");
+  });
+
+  return db;
+};
+
+export default createDB;
+```
+
+### Step 5: Create Database Table
+
+1. Create a file `models/Post.js`
+2. First, import the database connection and create the database instance:
+
+```javascript
+import createDB from "../db_config/database.js";
+
+const db = createDB();
+```
+
+3. Add the table creation code:
+
+```javascript
+// CREATE TABLE
+const sqlQuery = `CREATE TABLE IF NOT EXISTS posts(
+id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+title VARCHAR(250) NOT NULL,
+content TEXT NOT NULL,
+author TEXT NOT NULL,
+category TEXT,
+featured_image_url TEXT,
+created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+)`;
+
+// CREATE TABLE
+db.serialize(() => {
+  db.run(sqlQuery, (error) => {
+    if (!error) return console.log("Table Created Successfully!");
+    console.log("Error Creating Table", error);
+  });
+});
+```
+
+## CRUD Operations
+
+### Step 6: Implement CRUD Functions
+
+Add the following functions to your `models/Post.js` file:
+
+#### Create a New Blog Post
+
+```javascript
+// INSERT DATA
+export const createPost = ({ title, content, author, category }) => {
+  return new Promise((resolve, reject) => {
+    const insertQuery = `INSERT INTO posts (title, content, author,category) VALUES(?, ?, ?, ?)`;
+    const stmt = db.prepare(insertQuery);
+    stmt.run([title, content, author, category], (error) => {
+      if (!error) {
+        return resolve({
+          id: stmt.lastID,
+          title,
+          content,
+          author,
+          category,
+        });
+      }
+      return reject(error);
+    });
+    stmt.finalize();
+  });
+};
+```
+
+#### Get All Blog Posts
+
+```javascript
+// Get All Posts
+export const getAllPost = () => {
+  return new Promise((resolve, reject) => {
+    const getAllQuery = `SELECT * FROM posts`;
+    db.all(getAllQuery, (error, posts) => {
+      if (!error) return resolve(posts);
+      return reject(error);
+    });
+  });
+};
+```
+
+#### Get a Single Blog Post by ID
+
+```javascript
+export const getPostById = (id) => {
+  return new Promise((resolve, reject) => {
+    const getQuery = `SELECT * FROM posts WHERE id = ?`;
+    db.get(getQuery, [id], (error, post) => {
+      if (!error) return resolve(post);
+      return reject(error);
+    });
+  });
+};
+```
+
+#### Update an Existing Blog Post
+
+```javascript
+export const updatePost = ({ title, content, author, category, id }) => {
+  return new Promise((resolve, reject) => {
+    const updateQuery = `UPDATE posts SET title = ?, content = ? , author = ?, category = ? WHERE id = ?`;
+    const stmt = db.prepare(updateQuery);
+    stmt.run([title, content, author, category, id], (error) => {
+      if (!error) return resolve({ title, content, author, category, id });
+      return reject(error);
+    });
+    stmt.finalize();
+  });
+};
+```
+
+#### Delete a Blog Post
+
+```javascript
+export const deletePost = (id) => {
+  return new Promise((resolve, reject) => {
+    const deleteQuery = `DELETE FROM posts WHERE id = ?`;
+    const stmt = db.prepare(deleteQuery);
+    stmt.run([id], (error) => {
+      if (!error) return resolve(id);
+      return reject(error);
+    });
+  });
+};
+```
+
+## Next Steps
+
+After completing these steps, you'll have:
+
+- ✅ A configured Node.js project with all necessary dependencies
+- ✅ A SQLite database connection setup
+- ✅ A posts table created in your database
+- ✅ Complete CRUD operations for blog posts
+
+### Package.json Scripts
+
+Consider adding these scripts to your `package.json`:
+
+```json
+{
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  }
+}
+```
