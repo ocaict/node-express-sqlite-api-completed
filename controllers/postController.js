@@ -1,8 +1,10 @@
 import * as db from "../models/Post.js";
+import * as superbase from "../db_config/superbase.js";
 
 export const getAllPosts = async (req, res) => {
   try {
-    const posts = await db.getAllPost();
+    //const posts = await db.getAllPost();
+    const posts = await superbase.getPosts();
     res.send({ success: true, posts });
   } catch (error) {
     console.log("Error in get all posts controller", error);
@@ -14,7 +16,7 @@ export const getPost = async (req, res) => {
   const id = parseInt(req.params.id);
 
   try {
-    const post = await db.getPostById(id);
+    const post = await superbase.getPostById(id);
     if (!post)
       return res
         .status(404)
@@ -34,7 +36,7 @@ export const addPost = async (req, res) => {
       .json({ success: false, message: "Enter all the required fields" });
 
   try {
-    const result = await db.createPost({
+    const result = await superbase.insertPost({
       title,
       content,
       author,
@@ -56,8 +58,14 @@ export const updatePost = async (req, res) => {
       .json({ success: false, message: "Enter all the required fields" });
 
   try {
-    const updatedPost = await db.updatePost({
-      id,
+    // const updatedPost = await db.updatePost({
+    //   id,
+    //   title,
+    //   content,
+    //   author,
+    //   category: category ? category : "",
+    // });
+    const updatedPost = await superbase.updatePostById(id, {
       title,
       content,
       author,
@@ -75,7 +83,8 @@ export const deletePost = async (req, res) => {
   const id = parseInt(req.params.id);
 
   try {
-    const result = await db.deletePost(id);
+    // const result = await db.deletePost(id);
+    const result = await superbase.deletePostById(id);
     return res.status(200).json({
       success: true,
       message: `Post with ID '${result}' deleted successfully`,

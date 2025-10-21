@@ -3,6 +3,7 @@ import cors from "cors";
 import "dotenv/config";
 import postRouter from "./routes/postRoute.js";
 import job from "./utils/cron.js";
+import "./db_config/superbase.js";
 
 const app = express();
 const PORT = process.env.PORT || 3600;
