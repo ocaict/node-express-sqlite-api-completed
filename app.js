@@ -10,7 +10,9 @@ const PORT = process.env.PORT || 3600;
 
 // Middlewares
 app.use(cors());
-app.use(express.json());
+
+// Set Size to JSON payload to 2mb
+app.use(express.json({ limit: "2mb" }));
 
 // Cron Job
 if (process.env.NODE_ENV === "production") {

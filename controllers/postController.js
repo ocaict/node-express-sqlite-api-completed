@@ -29,7 +29,7 @@ export const getPost = async (req, res) => {
 };
 
 export const addPost = async (req, res) => {
-  const { title, content, author, category } = req.body;
+  const { title, content, author, category, featured_image_url } = req.body;
   if (!title || !content || !author)
     return res
       .status(400)
@@ -41,6 +41,7 @@ export const addPost = async (req, res) => {
       content,
       author,
       category: category ? category : "",
+      featured_image_url: featured_image_url ? featured_image_url : "",
     });
     return res.status(201).json({ success: true, post: result });
   } catch (error) {
