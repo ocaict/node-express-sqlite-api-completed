@@ -22,22 +22,32 @@ db.serialize(() => {
 });
 
 // INSERT DATA
-export const createPost = ({ title, content, author, category }) => {
+export const createPost = ({
+  title,
+  content,
+  author,
+  category,
+  featured_image_url,
+}) => {
   return new Promise((resolve, reject) => {
-    const insertQuery = `INSERT INTO posts (title, content, author,category) VALUES(?, ?, ?, ?)`;
+    const insertQuery = `INSERT INTO posts (title, content, author,category, featured_image_url ) VALUES(?, ?, ?, ?,?)`;
     const stmt = db.prepare(insertQuery);
-    stmt.run([title, content, author, category], (error) => {
-      if (!error) {
-        return resolve({
-          id: stmt.lastID,
-          title,
-          content,
-          author,
-          category,
-        });
+    stmt.run(
+      [title, content, author, category, featured_image_url],
+      (error) => {
+        if (!error) {
+          return resolve({
+            id: stmt.lastID,
+            title,
+            content,
+            author,
+            category,
+            featured_image_url,
+          });
+        }
+        return reject(error);
       }
-      return reject(error);
-    });
+    );
     stmt.finalize();
   });
 };
@@ -66,14 +76,32 @@ export const getPostById = (id) => {
 
 // updatePost(postData) - Update existing post
 
-export const updatePost = ({ title, content, author, category, id }) => {
+export const updatePost = ({
+  title,
+  content,
+  author,
+  category,
+  featured_image_url,
+  id,
+}) => {
   return new Promise((resolve, reject) => {
-    const updateQuery = `UPDATE posts SET title = ?, content = ? , author = ?, category = ? WHERE id = ?`;
+    const updateQuery = `UPDATE posts SET title = ?, content = ? , author = ?, category = ?, featured_image_url= ? WHERE id = ?`;
     const stmt = db.prepare(updateQuery);
-    stmt.run([title, content, author, category, id], (error) => {
-      if (!error) return resolve({ title, content, author, category, id });
-      return reject(error);
-    });
+    stmt.run(
+      [title, content, author, category, featured_image_url, id],
+      (error) => {
+        if (!error)
+          return resolve({
+            title,
+            content,
+            author,
+            category,
+            featured_image_url,
+            id,
+          });
+        return reject(error);
+      }
+    );
     stmt.finalize();
   });
 };
