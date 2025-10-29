@@ -52,7 +52,7 @@ export const addPost = async (req, res) => {
 
 export const updatePost = async (req, res) => {
   const id = parseInt(req.params.id);
-  const { title, content, author, category } = req.body;
+  const { title, content, author, category, featured_image_url } = req.body;
   if (!title || !content || !author)
     return res
       .status(400)

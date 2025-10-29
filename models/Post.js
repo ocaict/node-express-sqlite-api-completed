@@ -85,7 +85,7 @@ export const updatePost = ({
   id,
 }) => {
   return new Promise((resolve, reject) => {
-    const updateQuery = `UPDATE posts SET title = ?, content = ? , author = ?, category = ?, featured_image_url= ? WHERE id = ?`;
+    const updateQuery = `UPDATE posts SET title = ?, content = ? , author = ?, category = ?, featured_image_url = ? WHERE id = ?`;
     const stmt = db.prepare(updateQuery);
     stmt.run(
       [title, content, author, category, featured_image_url, id],
